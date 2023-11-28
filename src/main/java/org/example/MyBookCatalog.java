@@ -2,12 +2,11 @@ package org.example;
 
 import lt.techin.library.Book;
 import lt.techin.library.BookCatalog;
+import lt.techin.library.BookNotFoundException;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Predicate;
 
 public class MyBookCatalog implements BookCatalog {
@@ -22,6 +21,9 @@ public class MyBookCatalog implements BookCatalog {
         if (book==null){
             throw new IllegalArgumentException();
         }
+        if (book.getIsbn()==null||book.getIsbn().isEmpty()||book.getTitle()==null||book.getTitle().isEmpty()){
+            throw new IllegalArgumentException();
+        }
         if (!isBookInCatalog(book.getIsbn())){
             books.add(book);
         }
@@ -29,6 +31,7 @@ public class MyBookCatalog implements BookCatalog {
 
     @Override
     public Book getBookByIsbn(String isbnNumber) {
+
         for (int i =0;i<books.size();i++){
             if (books.get(i).getIsbn().equals(isbnNumber)){
                 return books.get(i);
@@ -57,13 +60,16 @@ public class MyBookCatalog implements BookCatalog {
     }
 
     @Override
-    public boolean isBookAvailable(String s) {
-        return false;
+    public boolean isBookAvailable(String isbn) {
+        return getBookByIsbn(isbn).isAvailable();
     }
 
     @Override
-    public Book findNewestBookByPublisher(String s) {
-        return null;
+    public Book findNewestBookByPublisher(String publisher) {
+        if (groupBooksByPublisher().get(publisher)==null){
+            throw new BookNotFoundException("no book for this publisher");
+        }
+    return groupBooksByPublisher().get(publisher).stream().max(Comparator.comparing(Book::getPublicationYear)).get();
     }
 
     @Override
@@ -73,7 +79,13 @@ public class MyBookCatalog implements BookCatalog {
 
     @Override
     public Map<String, List<Book>> groupBooksByPublisher() {
-        return null;
+        Map <String,List<Book>> groupByPublisher = new HashMap<>();
+        for (Book book : books) {
+            String publisher = book.getPublisher();
+            groupByPublisher.putIfAbsent(publisher, new ArrayList<>());
+            groupByPublisher.get(publisher).add(book);
+        }
+        return groupByPublisher;
     }
 
     @Override
