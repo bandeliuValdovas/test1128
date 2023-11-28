@@ -8,6 +8,7 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.*;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 public class MyBookCatalog implements BookCatalog {
     private List<Book> books;
@@ -74,7 +75,11 @@ public class MyBookCatalog implements BookCatalog {
 
     @Override
     public List<Book> getSortedBooks() {
-        return null;
+        return books.stream()
+                .sorted(Comparator.comparing(Book::getPublicationYear)
+                        .thenComparing(Book::getTitle)
+                        .thenComparing(Book::getPageCount))
+                .collect(Collectors.toList());
     }
 
     @Override
