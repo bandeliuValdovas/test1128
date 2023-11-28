@@ -45,8 +45,9 @@ public class MyBookCatalog implements BookCatalog {
 
     @Override
     public List<Book> searchBooksByAuthor(String author) {
-        return books.stream().filter(a-> a.getAuthors().stream().anyMatch(b->b.getName().equals(author))).collect(Collectors.toList());
-
+        return books.stream()
+                .filter(a-> a.getAuthors().stream().anyMatch(b->b.getName().equals(author)))
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -69,7 +70,9 @@ public class MyBookCatalog implements BookCatalog {
         if (groupBooksByPublisher().get(publisher)==null){
             throw new BookNotFoundException("no book for this publisher");
         }
-    return groupBooksByPublisher().get(publisher).stream().max(Comparator.comparing(Book::getPublicationYear)).get();
+    return groupBooksByPublisher().get(publisher).stream()
+            .max(Comparator.comparing(Book::getPublicationYear))
+            .get();
     }
 
     @Override
