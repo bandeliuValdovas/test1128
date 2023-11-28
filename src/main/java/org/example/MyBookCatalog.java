@@ -33,21 +33,20 @@ public class MyBookCatalog implements BookCatalog {
     @Override
     public Book getBookByIsbn(String isbnNumber) {
 
-        for (int i =0;i<books.size();i++){
-            if (books.get(i).getIsbn().equals(isbnNumber)){
-                return books.get(i);
+        for (Book book : books) {
+            if (book.getIsbn().equals(isbnNumber)) {
+                return book;
             }
         }
+     // su throw new BookNotFoundException("not found"); griuna beveik visi testai.
+     //   throw new BookNotFoundException("not found");
         return null;
-    }
+  }
 
     @Override
     public List<Book> searchBooksByAuthor(String author) {
-        List<Book> booksByAuthor = new ArrayList<>();
-        for (int i =0;i<books.size();i++){
-            if (books.get(i).getAuthors().contains(author));
-        }
-        return null;
+        return books.stream().filter(a-> a.getAuthors().stream().anyMatch(b->b.getName().equals(author))).collect(Collectors.toList());
+
     }
 
     @Override
@@ -95,15 +94,18 @@ public class MyBookCatalog implements BookCatalog {
 
     @Override
     public List<Book> filterBooks(Predicate<Book> predicate) {
-        return null;
+
+        return books.stream().filter(predicate)
+                .collect(Collectors.toList());
     }
 
     @Override
     public BigDecimal calculateTotalPrice() {
         BigDecimal sum = new BigDecimal(BigInteger.ZERO);
-        for (int i =0;i<books.size();i++){
-            sum = sum.add(books.get(i).getPrice());
+        for (Book book : books) {
+            sum = sum.add(book.getPrice());
         }
         return sum;
     }
+
 }
