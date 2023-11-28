@@ -4,6 +4,7 @@ import lt.techin.library.Book;
 import lt.techin.library.BookCatalog;
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -21,7 +22,7 @@ public class MyBookCatalog implements BookCatalog {
         if (book==null){
             throw new IllegalArgumentException();
         }
-        if (getBookByIsbn(book.getIsbn())==null){
+        if (!isBookInCatalog(book.getIsbn())){
             books.add(book);
         }
     }
@@ -82,6 +83,10 @@ public class MyBookCatalog implements BookCatalog {
 
     @Override
     public BigDecimal calculateTotalPrice() {
-        return null;
+        BigDecimal sum = new BigDecimal(BigInteger.ZERO);
+        for (int i =0;i<books.size();i++){
+            sum = sum.add(books.get(i).getPrice());
+        }
+        return sum;
     }
 }
