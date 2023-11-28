@@ -40,7 +40,7 @@ public class MyBookCatalog implements BookCatalog {
     public List<Book> searchBooksByAuthor(String author) {
         List<Book> booksByAuthor = new ArrayList<>();
         for (int i =0;i<books.size();i++){
-            if (books.get(i).getAuthors().contains(author))
+            if (books.get(i).getAuthors().contains(author));
         }
         return null;
     }
@@ -51,8 +51,8 @@ public class MyBookCatalog implements BookCatalog {
     }
 
     @Override
-    public boolean isBookInCatalog(String s) {
-        return false;
+    public boolean isBookInCatalog(String isbn) {
+        return !(getBookByIsbn(isbn)==null);
     }
 
     @Override
